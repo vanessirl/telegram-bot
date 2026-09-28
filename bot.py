@@ -1,4 +1,6 @@
+import os
 import asyncio
+from aiohttp import web
 from aiogram import Bot, Dispatcher
 from aiogram.types import ChatJoinRequest
 from aiogram.exceptions import TelegramRetryAfter, TelegramBadRequest, TelegramServerError
@@ -28,10 +30,21 @@ async def approve_request(request: ChatJoinRequest):
             print(f"Другая ошибка (пропускаем): {e}")
             break
 
+async def handle_ping(request):
+    return web.Response(text="Bot is running!")
+
 async def main():
+    # Простой HTTP-сервер для ублажения Render
+    app = web.Application()
+    app.router.add_get("/", handle_ping)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 10000))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+
     print("Бот успешно запущен и ожидает заявки!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
-  
