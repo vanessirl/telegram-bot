@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import ChatJoinRequest
 from aiogram.exceptions import TelegramRetryAfter, TelegramBadRequest, TelegramServerError
 
-BOT_TOKEN = "8936267028:AAH0yeo2RADulctzT_ytMK5syUdrPvNg_WI"
+BOT_TOKEN = "8936267028:AAH74MO6J3ig0DcuKK1azT7Tn60HdNeB--I"
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -42,6 +42,9 @@ async def main():
     port = int(os.environ.get("PORT", 10000))
     site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
+
+    print("Удаляем активный вебхук и запускаем бота...")
+    await bot.delete_webhook(drop_pending_updates=True)
 
     print("Бот успешно запущен и ожидает заявки!")
     await dp.start_polling(bot)
